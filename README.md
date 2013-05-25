@@ -21,6 +21,9 @@ FileTree is a java swing Tree for files.
 3. Include libraries
 4. Done.
 
+### Screenshot
+![alt text](http://i.imgur.com/2O83R8I.png "FileTree Windows, Linux, Mac OS X")
+
 ### Download
 * Build(25.05.2013): http://www.mediafire.com/download/r517xnxqjzaa9ax/FileTree_build.zip
 * Libs(25.05.2013): http://www.mediafire.com/download/hmblwrwmd099wix/FileTree_libs.zip
