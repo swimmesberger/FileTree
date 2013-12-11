@@ -1,0 +1,3 @@
+[submodule "libs/OSUtil"]
+	path = libs/OSUtil
+	url = https://github.com/Thedeath/OSUtil.git
