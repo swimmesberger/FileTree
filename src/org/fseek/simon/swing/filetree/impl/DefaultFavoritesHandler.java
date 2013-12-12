@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.impl;
+package org.fseek.simon.swing.filetree.impl;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.fseek.thedeath.filetree.interfaces.FavoritesChangedListener;
-import org.fseek.thedeath.filetree.interfaces.FavoritesHandler;
+import org.fseek.simon.swing.filetree.interfaces.FavoritesChangedListener;
+import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
 import org.fseek.thedeath.os.CachedFileSystemView;
 import org.fseek.thedeath.os.VirtuaDirectory;
 import org.fseek.thedeath.os.util.FileSystemUtil;

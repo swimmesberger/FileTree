@@ -1,12 +1,12 @@
-package org.fseek.thedeath.filetree.impl;
+package org.fseek.simon.swing.filetree.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.thedeath.os.util.Debug;
-import org.fseek.thedeath.filetree.util.TreeUtil;
+import org.fseek.simon.swing.util.TreeUtil;
 
 public class AddChildsThread extends Thread
 { 

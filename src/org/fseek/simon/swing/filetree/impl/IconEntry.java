@@ -1,7 +1,7 @@
-package org.fseek.thedeath.filetree.impl;
+package org.fseek.simon.swing.filetree.impl;
 
 import java.io.File;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 
 /**
  *

@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.interfaces;
+package org.fseek.simon.swing.filetree.interfaces;
 
 import java.io.File;
 

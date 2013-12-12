@@ -1,12 +1,12 @@
-package org.fseek.thedeath.filetree;
+package org.fseek.simon.swing.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import org.fseek.thedeath.filetree.interfaces.FavoritesHandler;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.thedeath.os.CachedFileSystemView;
 
 public class FavoritePopupMenu extends JPopupMenu

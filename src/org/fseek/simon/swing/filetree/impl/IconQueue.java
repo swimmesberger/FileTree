@@ -1,11 +1,11 @@
-package org.fseek.thedeath.filetree.impl;
+package org.fseek.simon.swing.filetree.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 import javax.swing.ImageIcon;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.thedeath.os.util.Debug;
 import org.fseek.thedeath.os.CachedFileSystemView;
 

@@ -1,4 +1,4 @@
- package org.fseek.thedeath.filetree.impl;
+ package org.fseek.simon.swing.filetree.impl;
 
 import java.io.File;
 import org.apache.commons.io.filefilter.AbstractFileFilter;

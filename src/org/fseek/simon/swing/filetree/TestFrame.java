@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-package org.fseek.thedeath.filetree;
+package org.fseek.simon.swing.filetree;
 
 import java.awt.BorderLayout;
 import java.awt.event.MouseEvent;
@@ -33,7 +33,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
-import org.fseek.thedeath.filetree.interfaces.FileListener;
+import org.fseek.simon.swing.filetree.interfaces.FileListener;
 import org.fseek.thedeath.os.util.Debug;
 
 /**

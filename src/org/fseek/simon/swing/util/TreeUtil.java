@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.util;
+package org.fseek.simon.swing.util;
 
 import org.fseek.thedeath.os.util.Debug;
 import java.awt.EventQueue;
@@ -11,11 +11,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import org.apache.commons.io.comparator.DirectoryFileComparator;
-import org.fseek.thedeath.filetree.impl.AddChildsThread;
-import org.fseek.thedeath.filetree.impl.DefaultLinkTreeNode;
-import org.fseek.thedeath.filetree.impl.TreeFileFilter;
-import org.fseek.thedeath.filetree.interfaces.IconChangedListener;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.impl.AddChildsThread;
+import org.fseek.simon.swing.filetree.impl.DefaultLinkTreeNode;
+import org.fseek.simon.swing.filetree.impl.TreeFileFilter;
+import org.fseek.simon.swing.filetree.interfaces.IconChangedListener;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 /*
  * This class definetly needs rework
  * #dirty

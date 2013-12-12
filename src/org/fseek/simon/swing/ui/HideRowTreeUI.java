@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.ui;
+package org.fseek.simon.swing.ui;
 
 import java.awt.Graphics;
 import java.awt.Insets;

@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.impl;
+package org.fseek.simon.swing.filetree.impl;
 
 import java.awt.Color;
 import java.awt.Image;
@@ -7,8 +7,8 @@ import java.io.File;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
-import org.fseek.thedeath.filetree.interfaces.IconChangedListener;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.IconChangedListener;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.thedeath.os.CachedFileSystemView;
 import org.fseek.thedeath.os.util.UtilBox;
 

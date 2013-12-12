@@ -1,4 +1,4 @@
-package org.fseek.thedeath.filetree.ui;
+package org.fseek.simon.swing.ui;
 
 
 import java.awt.Color;
@@ -8,7 +8,7 @@ import java.util.Locale;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import org.fseek.thedeath.filetree.interfaces.LinkTreeNode;
+import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.thedeath.os.util.OSUtil;
 
 public class IconTreeCellRenderer extends DefaultTreeCellRenderer
