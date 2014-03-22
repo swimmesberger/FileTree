@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.ActionMap;
 import javax.swing.DropMode;
 import javax.swing.TransferHandler;
+import javax.swing.TransferHandler.DropLocation;
 import javax.swing.TransferHandler.TransferSupport;
 
 /**
@@ -13,7 +14,7 @@ import javax.swing.TransferHandler.TransferSupport;
  * @author Simon Wimmesberger
  */
 public interface IFileDragDropSupport extends ClipboardOwner{
-    public boolean importFile(File[] file, int action);
+    public boolean importFile(File[] file, int action, DropLocation dropLocation);
     public boolean canImport(TransferSupport support);
     public File[] getSelectedFiles();
     public TransferHandler getTransferHandler();

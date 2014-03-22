@@ -131,7 +131,7 @@ public class FileTransferHandler extends TransferHandler
                 transferData = getFromFileString(transferable);
             }
             if(transferData != null){
-                return hasFile.importFile(transferData, action);
+                return hasFile.importFile(transferData, action, support.getDropLocation());
             }
         }
         if(transferData == null){

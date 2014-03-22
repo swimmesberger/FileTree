@@ -626,22 +626,49 @@ public class FileTree extends JTree implements IFileDragDropSupport
     }
 
     @Override
-    public boolean importFile(File[] file, int action) {
+    public boolean importFile(File[] file, int action, TransferHandler.DropLocation dropLocation) {
+        DropLocation treeLoc = (DropLocation)dropLocation;
+        Object lastPathComponent = treeLoc.getPath().getLastPathComponent();
+        if(lastPathComponent instanceof LinkTreeNode){
+            LinkTreeNode dropNode = (LinkTreeNode)lastPathComponent;
+            File dropFile = dropNode.getLinkDir();
+            if(canImport(dropFile) == false)return false;
+            return importFile(file, dropFile);
+        }
+        return false;
+    }
+    
+    public boolean importFile(File[] file, File drop){
         for(File f : file){
-            Debug.println("Import file: " + f.getAbsolutePath());
+            Debug.println("Import file: " + f.getAbsolutePath() + " into " + drop.getAbsolutePath());
         }
         return true;
+    }
+    
+    public boolean canImport(File drop) {
+        return drop != null && drop.isDirectory();
     }
 
     @Override
     public boolean canImport(TransferHandler.TransferSupport support) {
-        support.setShowDropLocation(true);
-        return true;
+        DropLocation treeLoc = (DropLocation)support.getDropLocation();
+        Object lastPathComponent = treeLoc.getPath().getLastPathComponent();
+        if(lastPathComponent instanceof LinkTreeNode){
+            LinkTreeNode dropNode = (LinkTreeNode)lastPathComponent;
+            File dropFile = dropNode.getLinkDir();
+            boolean canImport = canImport(dropFile);
+            support.setShowDropLocation(canImport);
+            return canImport;
+        }
+        return false;
     }
 
     @Override
     public File[] getSelectedFiles() {
         TreePath[] selectionPaths = this.getSelectionPaths();
+        if(selectionPaths == null){
+            return new File[0];
+        }
         File[] selFiles = new File[selectionPaths.length];
         for(int i = 0; i<selFiles.length; i++){
             Object lastPath  = selectionPaths[i].getLastPathComponent();
