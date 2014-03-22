@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Simon Wimmesberger<www.fseek.org>
+ * Copyright (C) 2014 Simon Wimmesberger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

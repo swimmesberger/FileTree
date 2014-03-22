@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Thedeath<www.fseek.org>
+ * Copyright (C) 2014 Thedeath
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,10 +100,14 @@ public class FileTransferhandler extends TransferHandler
                 Logger.getLogger(FileTransferhandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        int dropAction = support.getDropAction();
+        //TODO: Java doesn't support cut operations via Clipboard, so we have to assume COPY if the source is the Clipboard
+        int dropAction = TransferHandler.COPY;
+        if(support.isDrop()){
+            dropAction = support.getDropAction();
+        }
         return importData(support, dropAction);
     }
-    
+
     public boolean importData(TransferSupport support, int action)
     {
         Transferable transferable = support.getTransferable();
@@ -133,19 +137,6 @@ public class FileTransferhandler extends TransferHandler
     public int getSourceActions(JComponent c)
     {
         return COPY_OR_MOVE;
-    }
-
-    @Override
-    protected Transferable createTransferable(JComponent c) {
-        if(c instanceof IFileDragDropSupport){
-            try {
-                IFileDragDropSupport sel = (IFileDragDropSupport)c;
-                return new FileTransferable(sel.getSelectedFiles());
-            } catch (IOException ex) {
-                Logger.getLogger(FileTransferhandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return super.createTransferable(c); //To change body of generated methods, choose Tools | Templates.
     }
 
     private File[] getFile(Transferable transferable)

@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -31,6 +33,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
+import org.fseek.simon.swing.filetree.dnd.CopyCutPaseAction;
 import org.fseek.simon.swing.filetree.dnd.FileDragGestureListener;
 import org.fseek.simon.swing.filetree.dnd.FileTransferhandler;
 import org.fseek.simon.swing.filetree.dnd.interfaces.IFileDragDropSupport;
@@ -118,6 +121,14 @@ public class FileTree extends JTree implements IFileDragDropSupport
         this.setTransferHandler(new FileTransferhandler(this));
         DragSource ds = DragSource.getDefaultDragSource();
         DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, new FileDragGestureListener(this));
+        ActionMap actionMap = this.getActionMap();
+        
+        CopyCutPaseAction cut = new CopyCutPaseAction(this, "cut");
+        CopyCutPaseAction copy = new CopyCutPaseAction(this, "copy");
+        CopyCutPaseAction paste = new CopyCutPaseAction(this, "paste");
+        actionMap.put(cut.getValue(Action.NAME), cut);
+        actionMap.put(copy.getValue(Action.NAME), copy);
+        actionMap.put(paste.getValue(Action.NAME), paste);
     }
     
     private void initDefaults(){
