@@ -3,9 +3,6 @@ package org.fseek.simon.swing.filetree;
 import java.awt.EventQueue;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragGestureRecognizer;
-import java.awt.dnd.DragSource;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -17,9 +14,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
-import javax.swing.ActionMap;
-import javax.swing.DropMode;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -33,9 +27,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
-import org.fseek.simon.swing.filetree.dnd.CopyCutPaseAction;
-import org.fseek.simon.swing.filetree.dnd.FileDragGestureListener;
-import org.fseek.simon.swing.filetree.dnd.FileTransferhandler;
 import org.fseek.simon.swing.filetree.dnd.interfaces.IFileDragDropSupport;
 import org.fseek.simon.swing.filetree.impl.AddChildsThread;
 import org.fseek.simon.swing.filetree.impl.DefaultFavoritesHandler;
@@ -49,6 +40,7 @@ import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
 import org.fseek.simon.swing.ui.FileTreePopupMenu;
 import org.fseek.simon.swing.ui.HideRowTreeUI;
 import org.fseek.simon.swing.ui.IconTreeCellRenderer;
+import org.fseek.simon.swing.util.UtilBox;
 import org.fseek.thedeath.os.VirtuaDirectory;
 import org.fseek.thedeath.os.interfaces.IFileSystem;
 import org.fseek.thedeath.os.interfaces.IOSIcons;
@@ -116,19 +108,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
     private void init(){
         setSimpleIcons(false);
         iconChanged = new FileTreeIconChangedListener((DefaultTreeModel)getModel());
-        this.setDragEnabled(true);
-        this.setDropMode(DropMode.ON_OR_INSERT);
-        this.setTransferHandler(new FileTransferhandler(this));
-        DragSource ds = DragSource.getDefaultDragSource();
-        DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, new FileDragGestureListener(this));
-        ActionMap actionMap = this.getActionMap();
-        
-        CopyCutPaseAction cut = new CopyCutPaseAction(this, "cut");
-        CopyCutPaseAction copy = new CopyCutPaseAction(this, "copy");
-        CopyCutPaseAction paste = new CopyCutPaseAction(this, "paste");
-        actionMap.put(cut.getValue(Action.NAME), cut);
-        actionMap.put(copy.getValue(Action.NAME), copy);
-        actionMap.put(paste.getValue(Action.NAME), paste);
+        UtilBox.initFileTransfer(this);
     }
     
     private void initDefaults(){

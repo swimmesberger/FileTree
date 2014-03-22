@@ -32,16 +32,16 @@ import javax.swing.UIManager;
 import org.fseek.simon.swing.filetree.dnd.interfaces.IFileDragDropSupport;
 import sun.swing.UIAction;
 
-public class CopyCutPaseAction extends UIAction {
+public class FileTransferAction extends UIAction {
 
     private IFileDragDropSupport selection;
 
-    public CopyCutPaseAction(IFileDragDropSupport selection, String name) {
+    public FileTransferAction(IFileDragDropSupport selection, String name) {
         super(name);
         this.selection = selection;
     }
 
-    public CopyCutPaseAction(String name) {
+    public FileTransferAction(String name) {
         super(name);
     }
 
@@ -54,7 +54,7 @@ public class CopyCutPaseAction extends UIAction {
         try {
             clipboard.setContents(new FileTransferable(temp), selection);
         } catch (IOException ex) {
-            Logger.getLogger(CopyCutPaseAction.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FileTransferAction.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -73,7 +73,7 @@ public class CopyCutPaseAction extends UIAction {
         Object src = e.getSource();
         if (src instanceof JComponent) {
             JComponent c = (JComponent) src;
-            TransferHandler th = selection.getTransferHandler();
+            TransferHandler th = c.getTransferHandler();
             Clipboard clipboard = getClipboard(c);
             String name = (String) getValue(Action.NAME);
             Transferable trans = null;
@@ -85,7 +85,7 @@ public class CopyCutPaseAction extends UIAction {
                 try {
                     trans = new FileTransferable(files);
                 } catch (IOException ex) {
-                    Logger.getLogger(CopyCutPaseAction.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(FileTransferAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
 
@@ -116,9 +116,9 @@ public class CopyCutPaseAction extends UIAction {
 
             // this is a paste action, import data into the component
             if (trans != null) {
-                if (trans instanceof FileTransferable && th instanceof FileTransferhandler) {
+                if (trans instanceof FileTransferable && th instanceof FileTransferHandler) {
                     FileTransferable fileTrans = (FileTransferable) trans;
-                    FileTransferhandler fileTh = (FileTransferhandler) th;
+                    FileTransferHandler fileTh = (FileTransferHandler) th;
                     fileTh.importData(new TransferSupport(c, fileTrans), fileTrans.getAction());
                 } else {
                     th.importData(new TransferSupport(c, trans));

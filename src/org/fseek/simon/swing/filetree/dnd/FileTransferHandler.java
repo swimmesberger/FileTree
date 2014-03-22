@@ -33,8 +33,12 @@ import org.apache.commons.io.FileUtils;
 import org.fseek.simon.swing.filetree.dnd.interfaces.IFileDragDropSupport;
 import sun.awt.datatransfer.TransferableProxy;
 
-public class FileTransferhandler extends TransferHandler
-{
+public class FileTransferHandler extends TransferHandler
+{    
+    private FileTransferAction cutAction;
+    private FileTransferAction copyAction;
+    private FileTransferAction pasteAction;
+
     private static DataFlavor urlFlavor;
     private static DataFlavor uriList;
     
@@ -54,13 +58,16 @@ public class FileTransferhandler extends TransferHandler
             };
         } catch (ClassNotFoundException ex)
         {
-            Logger.getLogger(FileTransferhandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FileTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     private IFileDragDropSupport hasFile;
-    public FileTransferhandler(IFileDragDropSupport hasFile)
+    public FileTransferHandler(IFileDragDropSupport hasFile)
     {
+        cutAction = new FileTransferAction(hasFile, "cut");
+        copyAction = new FileTransferAction(hasFile, "copy");
+        pasteAction = new FileTransferAction(hasFile, "paste");
         this.hasFile = hasFile;
     }
    
@@ -97,7 +104,7 @@ public class FileTransferhandler extends TransferHandler
                 return importData(support, fieldValue.getAction());
             } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException ex)
             {
-                Logger.getLogger(FileTransferhandler.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(FileTransferHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         //TODO: Java doesn't support cut operations via Clipboard, so we have to assume COPY if the source is the Clipboard
@@ -128,7 +135,7 @@ public class FileTransferhandler extends TransferHandler
             }
         }
         if(transferData == null){
-            Logger.getLogger(FileTransferhandler.class.getName()).log(Level.INFO, "Unsupported flavor: {0}", dataFlavors[0].getMimeType());
+            Logger.getLogger(FileTransferHandler.class.getName()).log(Level.INFO, "Unsupported flavor: {0}", dataFlavors[0].getMimeType());
         }
         return false;
     }
@@ -137,6 +144,18 @@ public class FileTransferhandler extends TransferHandler
     public int getSourceActions(JComponent c)
     {
         return COPY_OR_MOVE;
+    }
+    
+    public FileTransferAction getCutFileAction() {
+        return cutAction;
+    }
+
+    public FileTransferAction getCopyFileAction() {
+        return copyAction;
+    }
+
+    public FileTransferAction getPasteFileAction() {
+        return pasteAction;
     }
 
     private File[] getFile(Transferable transferable)
