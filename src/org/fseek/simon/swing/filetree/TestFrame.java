@@ -151,8 +151,14 @@ public class TestFrame extends JFrame implements WindowListener
         @Override
         public void fileChanged(File f, EventObject ev)
         {
-            fileInfo.setText("Selected File: " + f.getAbsolutePath());
-            Debug.println("File changed: " + f.getAbsolutePath());
+            String path;
+            if(f == null){
+                path = null;
+            }else{
+                path = f.getAbsolutePath();
+            }
+            fileInfo.setText("Selected File: " + path);
+            Debug.println("File changed: " + path);
         } 
     }
 }

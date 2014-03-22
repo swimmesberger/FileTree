@@ -1,8 +1,11 @@
 package org.fseek.simon.swing.filetree;
 
-import org.fseek.simon.swing.ui.FavoritePopupMenu;
 import java.awt.EventQueue;
-import org.fseek.simon.swing.filetree.impl.DefaultLinkTreeNode;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureRecognizer;
+import java.awt.dnd.DragSource;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -14,8 +17,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DropMode;
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JTree;
+import javax.swing.TransferHandler;
 import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -25,25 +31,29 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
+import org.fseek.simon.swing.filetree.dnd.FileDragGestureListener;
+import org.fseek.simon.swing.filetree.dnd.FileTransferhandler;
+import org.fseek.simon.swing.filetree.dnd.interfaces.IFileDragDropSupport;
 import org.fseek.simon.swing.filetree.impl.AddChildsThread;
 import org.fseek.simon.swing.filetree.impl.DefaultFavoritesHandler;
+import org.fseek.simon.swing.filetree.impl.DefaultLinkTreeNode;
 import org.fseek.simon.swing.filetree.impl.IconQueue;
 import org.fseek.simon.swing.filetree.interfaces.FavoritesChangedListener;
 import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
 import org.fseek.simon.swing.filetree.interfaces.FileListener;
 import org.fseek.simon.swing.filetree.interfaces.IconChangedListener;
 import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
-import org.fseek.simon.swing.ui.IconTreeCellRenderer;
+import org.fseek.simon.swing.ui.FileTreePopupMenu;
 import org.fseek.simon.swing.ui.HideRowTreeUI;
-import org.fseek.thedeath.os.util.Debug;
-import org.fseek.thedeath.os.CachedFileSystemView;
+import org.fseek.simon.swing.ui.IconTreeCellRenderer;
 import org.fseek.thedeath.os.VirtuaDirectory;
-import org.fseek.thedeath.os.util.FileSystemUtil;
-import org.fseek.thedeath.os.util.OSUtil;
 import org.fseek.thedeath.os.interfaces.IFileSystem;
 import org.fseek.thedeath.os.interfaces.IOSIcons;
+import org.fseek.thedeath.os.util.Debug;
+import org.fseek.thedeath.os.util.FileSystemUtil;
+import org.fseek.thedeath.os.util.OSUtil;
 
-public class FileTree extends JTree
+public class FileTree extends JTree implements IFileDragDropSupport
 {  
     private boolean finishedBuildTree = false;
     private boolean showFiles = true;
@@ -88,7 +98,7 @@ public class FileTree extends JTree
         try
         {
             init();
-            LinkTreeNode node = new DefaultLinkTreeNode(folder, CachedFileSystemView.getFileSystemView().getSystemDisplayName(folder.getCanonicalFile()), iconChanged);
+            LinkTreeNode node = new DefaultLinkTreeNode(folder, OSUtil.getFileSystemView().getSystemDisplayName(folder.getCanonicalFile()), iconChanged);
             MutableTreeNode root = new DefaultMutableTreeNode();
             DefaultTreeModel model = new DefaultTreeModel(root);
             model.insertNodeInto(node, root, 0);
@@ -103,6 +113,11 @@ public class FileTree extends JTree
     private void init(){
         setSimpleIcons(false);
         iconChanged = new FileTreeIconChangedListener((DefaultTreeModel)getModel());
+        this.setDragEnabled(true);
+        this.setDropMode(DropMode.ON_OR_INSERT);
+        this.setTransferHandler(new FileTransferhandler(this));
+        DragSource ds = DragSource.getDefaultDragSource();
+        DragGestureRecognizer dgr = ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_COPY_OR_MOVE, new FileDragGestureListener(this));
     }
     
     private void initDefaults(){
@@ -141,7 +156,7 @@ public class FileTree extends JTree
     
     public void addFileToComputer(File f)
     {
-        DefaultLinkTreeNode linkTreeNode = new DefaultLinkTreeNode(f, CachedFileSystemView.getFileSystemView().getSystemDisplayName(f), iconChanged);
+        DefaultLinkTreeNode linkTreeNode = new DefaultLinkTreeNode(f, OSUtil.getFileSystemView().getSystemDisplayName(f), iconChanged);
         loadNewNode(linkTreeNode);
     }
     
@@ -182,9 +197,7 @@ public class FileTree extends JTree
             if(node != null)
             {
                 File linkDir = node.getLinkDir();
-                if(linkDir != null && linkDir instanceof VirtuaDirectory == false){
-                    fileSelectionChanged(linkDir, evt);
-                }
+                fileSelectionChanged(linkDir, evt);
             }
         }
     }
@@ -211,7 +224,7 @@ public class FileTree extends JTree
             LinkTreeNode node = (LinkTreeNode)path.getLastPathComponent();
             if(node.getParent() == null){
                 DefaultTreeModel model = (DefaultTreeModel)this.getModel();
-                Debug.println("Node hovering nowwhere, try to find the right one..");
+                Debug.println("Node hovering nowhere, try to find the right one..");
                 LinkTreeNode find = find((DefaultMutableTreeNode) model.getRoot(), node.getLinkDir());
                 if(find == null){
                         Debug.println("No node found...");
@@ -285,7 +298,7 @@ public class FileTree extends JTree
      * Can be used to show a popup for the rightclicked node
      */
     protected void showPopup(LinkTreeNode node, MouseEvent e){
-        FavoritePopupMenu menu = new FavoritePopupMenu(getFavoriteHandler(), node);
+        FileTreePopupMenu menu = new FileTreePopupMenu(getFavoriteHandler(), node);
         menu.show(e.getComponent(), e.getX(), e.getY());
     }
     
@@ -375,35 +388,20 @@ public class FileTree extends JTree
         initFavoNode(root);
         // creating Bibliothek
         IFileSystem fileSystem = FileSystemUtil.getFileSystem();
-        biblioNode = new DefaultLinkTreeNode(fileSystem.getHomeFolder(),osIcons.getLibaryIcon(), "Home", OSUtil.getOsColors().getTreeFontColor(), OSUtil.getOsColors().isTreeFontToUpperCase());
+        biblioNode = new DefaultLinkTreeNode(fileSystem.getHomeFolder(),osIcons.getLibraryIcon(), "Home", OSUtil.getOsColors().getTreeFontColor(), OSUtil.getOsColors().isTreeFontToUpperCase());
        
         // picture node
-        DefaultLinkTreeNode pictureNode = new DefaultLinkTreeNode(fileSystem.getImageFolder(), osIcons.getPictureIcon());
-        if(pictureNode.getLinkDir().exists())
-        {
-            model.insertNodeInto(pictureNode, getBiblioNode(), getBiblioNode().getChildCount());
-        }
+        addToLibraryIfExist(model, fileSystem.getImageFolder(), osIcons.getPictureIcon());
         
         // document node
-        DefaultLinkTreeNode documentNode = new DefaultLinkTreeNode(fileSystem.getDocumentsFolder(), osIcons.getDocumentIcon());
-        if(documentNode.getLinkDir().exists())
-        {
-            model.insertNodeInto(documentNode, getBiblioNode(), getBiblioNode().getChildCount());
-        }
+        addToLibraryIfExist(model, fileSystem.getDocumentsFolder(), osIcons.getDocumentIcon());
         
         // music node
-        DefaultLinkTreeNode musicNode = new DefaultLinkTreeNode(fileSystem.getMusicFolder(), osIcons.getMusicIcon());
-        if(musicNode.getLinkDir().exists())
-        {
-            model.insertNodeInto(musicNode, getBiblioNode(), getBiblioNode().getChildCount());
-        }
+        addToLibraryIfExist(model, fileSystem.getMusicFolder(), osIcons.getMusicIcon());
         
         // videos node
-        DefaultLinkTreeNode videosNode = new DefaultLinkTreeNode(fileSystem.getVideosFolder(), osIcons.getVideoIcon());
-        if(videosNode.getLinkDir().exists())
-        {
-            model.insertNodeInto(videosNode, getBiblioNode(), getBiblioNode().getChildCount());
-        }
+        addToLibraryIfExist(model, fileSystem.getVideosFolder(), osIcons.getVideoIcon());
+        
         if(biblioNode.getChildCount() > 0){
             model.insertNodeInto(getBiblioNode(), root, root.getChildCount());
         }
@@ -417,6 +415,19 @@ public class FileTree extends JTree
         loadNode(getComputerNode());
         loadNode(getBiblioNode(), true, true);
         setModel(model);
+    }
+    
+    protected void addToLibraryIfExist(DefaultTreeModel model, File f){
+        addToLibraryIfExist(model, f, OSUtil.getFileSystemView().getSystemIcon(f, false));
+    }
+    
+    protected void addToLibraryIfExist(DefaultTreeModel model, File f, ImageIcon icon){
+        if(f.exists() == false)return;
+        DefaultLinkTreeNode node = new DefaultLinkTreeNode(f, icon);
+        if(node.getLinkDir().exists())
+        {
+            model.insertNodeInto(node, getBiblioNode(), getBiblioNode().getChildCount());
+        }
     }
 
     /**
@@ -481,7 +492,7 @@ public class FileTree extends JTree
     public void addFavorite(File link)
     {
         if(favoriteHandler != null){
-            favoriteHandler.addFavorite(link, CachedFileSystemView.getFileSystemView().getSystemDisplayName(link));
+            favoriteHandler.addFavorite(link, OSUtil.getFileSystemView().getSystemDisplayName(link));
         }
     }
     
@@ -621,6 +632,39 @@ public class FileTree extends JTree
     {
         this.simpleIcons = simpleIcons;
         IconQueue.setSimpleIcons(simpleIcons);
+    }
+
+    @Override
+    public boolean importFile(File[] file, int action) {
+        for(File f : file){
+            Debug.println("Import file: " + f.getAbsolutePath());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canImport(TransferHandler.TransferSupport support) {
+        support.setShowDropLocation(true);
+        return true;
+    }
+
+    @Override
+    public File[] getSelectedFiles() {
+        TreePath[] selectionPaths = this.getSelectionPaths();
+        File[] selFiles = new File[selectionPaths.length];
+        for(int i = 0; i<selFiles.length; i++){
+            Object lastPath  = selectionPaths[i].getLastPathComponent();
+            if(lastPath instanceof LinkTreeNode){
+                LinkTreeNode node = (LinkTreeNode)lastPath;
+                selFiles[i] = node.getLinkDir();
+            }
+        }
+        return selFiles;
+    }
+
+    @Override
+    public void lostOwnership(Clipboard clipboard, Transferable contents) {
+        //clipboard.setContents(null, this);
     }
     
     private static class FileTreeIconChangedListener implements IconChangedListener {

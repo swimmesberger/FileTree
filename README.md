@@ -14,6 +14,7 @@ FileTree is a java swing Tree for files.
 1. Java 7
 2. ApacheIO (http://commons.apache.org/proper/commons-io/)
 3. OSUtil (http://github.com/Thedeath/OSUtil)
+4. Scalr (http://www.thebuzzmedia.com/software/imgscalr-java-image-scaling-library/)
 
 ### Setup
 1. Download the source

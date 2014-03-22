@@ -1,7 +1,6 @@
 package org.fseek.simon.swing.filetree.impl;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import javax.swing.Icon;
@@ -9,8 +8,8 @@ import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.fseek.simon.swing.filetree.interfaces.IconChangedListener;
 import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
-import org.fseek.thedeath.os.CachedFileSystemView;
-import org.fseek.thedeath.os.util.UtilBox;
+import org.fseek.simon.swing.util.UtilBox;
+import org.fseek.thedeath.os.util.OSUtil;
 
 /**
  *
@@ -70,11 +69,11 @@ public class DefaultLinkTreeNode extends DefaultMutableTreeNode implements LinkT
     
     public DefaultLinkTreeNode(File file, IconChangedListener lis)
     {
-        this(file, CachedFileSystemView.getFileSystemView().getSystemDisplayName(file), lis);
+        this(file, OSUtil.getFileSystemView().getSystemDisplayName(file), lis);
     }
     
     public DefaultLinkTreeNode(File file, ImageIcon icon){
-        this(file, icon, CachedFileSystemView.getFileSystemView().getSystemDisplayName(file));
+        this(file, icon, OSUtil.getFileSystemView().getSystemDisplayName(file));
     }
     
     
@@ -99,7 +98,9 @@ public class DefaultLinkTreeNode extends DefaultMutableTreeNode implements LinkT
     @Override
     public void setIcon(ImageIcon icon)
     {
-        icon = UtilBox.rescaleIconIfNeeded(icon, 17, 17);
+        if(icon.getIconWidth() > 17 || icon.getIconHeight() > 17){
+            icon = UtilBox.rescaleIconIfNeeded(icon, 17);
+        }
         this.icon = icon;
         if(lis != null)
             lis.iconChanged(this, icon);

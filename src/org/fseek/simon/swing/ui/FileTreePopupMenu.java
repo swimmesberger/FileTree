@@ -4,26 +4,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
 import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
-import org.fseek.thedeath.os.CachedFileSystemView;
+import org.fseek.thedeath.os.util.OSUtil;
 
-public class FavoritePopupMenu extends JPopupMenu
+public class FileTreePopupMenu extends JPopupMenu
 {
     private FavoritesHandler handler;
     private LinkTreeNode clickedNode;
-    public FavoritePopupMenu()
+    public FileTreePopupMenu()
     {
         super();
     }
     
-    public FavoritePopupMenu(FavoritesHandler handler, LinkTreeNode clickedNode)
+    public FileTreePopupMenu(FavoritesHandler handler, LinkTreeNode clickedNode)
     {
         super();
         this.handler = handler;
         this.clickedNode = clickedNode;
         createFavoriteMenu();
+        createOpenMenu();
     }
     
     private void createFavoriteMenu()
@@ -36,6 +38,31 @@ public class FavoritePopupMenu extends JPopupMenu
         }
     }
     
+    private void createOpenMenu(){
+        File f = clickedNode.getLinkDir();
+        if(f != null && f.isFile()){
+            this.add(createOpen());
+        }
+    }
+    
+    private JMenuItem createOpen(){
+        JMenuItem openFile = new JMenuItem("Open File");
+        openFile.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                File f = clickedNode.getLinkDir();
+                try{
+                    OSUtil.openFile(f);
+                }catch(UnsupportedOperationException ex){
+                    JOptionPane.showMessageDialog(FileTreePopupMenu.this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        return openFile;
+    }
+    
     private JMenuItem createAddFavorite()
     {
         JMenuItem addFavItem = new JMenuItem("Add to favorites");
@@ -45,7 +72,7 @@ public class FavoritePopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 File f = clickedNode.getLinkDir();
-                handler.addFavorite(f, CachedFileSystemView.getFileSystemView().getSystemDisplayName(f));
+                handler.addFavorite(f, OSUtil.getFileSystemView().getSystemDisplayName(f));
             }
         });
         return addFavItem;

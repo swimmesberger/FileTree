@@ -15,9 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.fseek.simon.swing.filetree.interfaces.FavoritesChangedListener;
 import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
-import org.fseek.thedeath.os.CachedFileSystemView;
 import org.fseek.thedeath.os.VirtuaDirectory;
 import org.fseek.thedeath.os.util.FileSystemUtil;
+import org.fseek.thedeath.os.util.OSUtil;
 
 /**
  *
@@ -56,7 +56,7 @@ public class DefaultFavoritesHandler implements FavoritesHandler
     
     public boolean createFavo(File f){
         if(f == null)return false;
-        return createFavo(f, CachedFileSystemView.getFileSystemView().getSystemDisplayName(f));
+        return createFavo(f, OSUtil.getFileSystemView().getSystemDisplayName(f));
     }
     
     public boolean createFavo(File f, String name)

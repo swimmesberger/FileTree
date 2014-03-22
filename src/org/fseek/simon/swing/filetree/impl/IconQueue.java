@@ -6,8 +6,9 @@ import java.util.Map;
 import java.util.Stack;
 import javax.swing.ImageIcon;
 import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
-import org.fseek.thedeath.os.util.Debug;
 import org.fseek.thedeath.os.CachedFileSystemView;
+import org.fseek.thedeath.os.util.Debug;
+import org.fseek.thedeath.os.util.OSUtil;
 
 /**
  *
@@ -106,7 +107,7 @@ public class IconQueue  extends Thread
         if(entry == null || entry.getFile() == null || entry.getNode() == null){
             return false;
         }
-        CachedFileSystemView fileSystemView = CachedFileSystemView.getFileSystemView();
+        CachedFileSystemView fileSystemView = OSUtil.getFileSystemView();
         ImageIcon icon = simpleIcons? fileSystemView.getSimpleIcon(entry.getFile()):fileSystemView.getSystemIcon(entry.getFile(), false);
         if(icon == null){
             //should normally not happen
