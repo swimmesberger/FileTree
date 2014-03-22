@@ -13,7 +13,7 @@ import org.fseek.thedeath.os.util.OSUtil;
 
 public class IconTreeCellRenderer extends DefaultTreeCellRenderer
 {
-    private static final Color SELECTION = new Color(140,191,242);
+    private static final Color SELECTION = OSUtil.getOsColors().getTreePanelSelectionColor();
     private static final Color NON_SELECTION = OSUtil.getOsColors().getTreePanelColor();
     
     @Override
