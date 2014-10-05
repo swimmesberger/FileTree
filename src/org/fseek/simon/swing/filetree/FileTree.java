@@ -1,3 +1,26 @@
+/* 
+ * The MIT License
+ *
+ * Copyright 2014 Simon Wimmesberger.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.fseek.simon.swing.filetree;
 
 import java.awt.EventQueue;
@@ -37,9 +60,9 @@ import org.fseek.simon.swing.filetree.interfaces.FavoritesHandler;
 import org.fseek.simon.swing.filetree.interfaces.FileListener;
 import org.fseek.simon.swing.filetree.interfaces.IconChangedListener;
 import org.fseek.simon.swing.filetree.interfaces.LinkTreeNode;
-import org.fseek.simon.swing.ui.FileTreePopupMenu;
-import org.fseek.simon.swing.ui.HideRowTreeUI;
-import org.fseek.simon.swing.ui.IconTreeCellRenderer;
+import org.fseek.simon.swing.filetree.ui.FileTreePopupMenu;
+import org.fseek.simon.swing.filetree.ui.HideRowTreeUI;
+import org.fseek.simon.swing.filetree.ui.IconTreeCellRenderer;
 import org.fseek.simon.swing.util.UtilBox;
 import org.fseek.thedeath.os.VirtuaDirectory;
 import org.fseek.thedeath.os.interfaces.IFileSystem;
@@ -379,7 +402,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
         initFavoNode(root);
         // creating Bibliothek
         IFileSystem fileSystem = FileSystemUtil.getFileSystem();
-        biblioNode = new DefaultLinkTreeNode(fileSystem.getHomeFolder(),osIcons.getLibraryIcon(), "Home", OSUtil.getOsColors().getTreeFontColor(), OSUtil.getOsColors().isTreeFontToUpperCase());
+        biblioNode = new DefaultLinkTreeNode(fileSystem.getHomeFolder(),osIcons.getLibraryIcon(), "Home", OSUtil.getOSAppearance().getTreeFontColor(), OSUtil.getOSAppearance().isTreeFontToUpperCase());
        
         // picture node
         addToLibraryIfExist(model, fileSystem.getImageFolder(), osIcons.getPictureIcon());
@@ -399,7 +422,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
         // end creating Bibliothek
        
         // creating Computer node
-        setComputerNode(new DefaultLinkTreeNode(OSUtil.getOsIcons().getComputerIcon(), "Computer", OSUtil.getOsColors().getTreeFontColor(), OSUtil.getOsColors().isTreeFontToUpperCase()));
+        setComputerNode(new DefaultLinkTreeNode(OSUtil.getOsIcons().getComputerIcon(), "Computer", OSUtil.getOSAppearance().getTreeFontColor(), OSUtil.getOSAppearance().isTreeFontToUpperCase()));
         model.insertNodeInto(getComputerNode(), root, root.getChildCount());
         initComputerNode();
         //end creating computer node
@@ -439,7 +462,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
     
     private void intTreeUI()
     {
-        setBackground(OSUtil.getOsColors().getTreePanelColor());
+        setBackground(OSUtil.getOSAppearance().getTreePanelColor());
         HideRowTreeUI ownUi = new HideRowTreeUI();
         setUI(ownUi);
         ownUi.setCollapsedIcon(OSUtil.getOsIcons().getUncollapsedIcon());
@@ -453,7 +476,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
     }
     
     public static void initUIManager(){
-        UIManager.put("Tree.hash", OSUtil.getOsColors().getTreePanelColor());
+        UIManager.put("Tree.hash", OSUtil.getOSAppearance().getTreePanelColor());
     }
     
     /**
@@ -523,7 +546,7 @@ public class FileTree extends JTree implements IFileDragDropSupport
         if(favoriteHandler != null){
             DefaultTreeModel model = (DefaultTreeModel)getModel();
             // creating Favorite node
-            favoNode = new DefaultLinkTreeNode(OSUtil.getOsIcons().getStarIcon(), "Favoriten", OSUtil.getOsColors().getTreeFontColor(), OSUtil.getOsColors().isTreeFontToUpperCase());
+            favoNode = new DefaultLinkTreeNode(OSUtil.getOsIcons().getStarIcon(), "Favoriten", OSUtil.getOSAppearance().getTreeFontColor(), OSUtil.getOSAppearance().isTreeFontToUpperCase());
             model.insertNodeInto(favoNode, root, 0);
             initFavorites();
             // end creating favorite node

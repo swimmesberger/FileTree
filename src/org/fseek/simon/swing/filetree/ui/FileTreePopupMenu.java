@@ -1,4 +1,27 @@
-package org.fseek.simon.swing.ui;
+/* 
+ * The MIT License
+ *
+ * Copyright 2014 Simon Wimmesberger.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package org.fseek.simon.swing.filetree.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,6 +49,7 @@ public class FileTreePopupMenu extends JPopupMenu
         this.clickedNode = clickedNode;
         createFavoriteMenu();
         createOpenMenu();
+        createPropertiesMenu();
     }
     
     private void createFavoriteMenu()
@@ -45,6 +69,10 @@ public class FileTreePopupMenu extends JPopupMenu
         }
     }
     
+    private void createPropertiesMenu(){
+        this.add(createProperty());
+    }
+    
     private JMenuItem createOpen(){
         JMenuItem openFile = new JMenuItem("Open File");
         openFile.addActionListener(new ActionListener() 
@@ -61,6 +89,21 @@ public class FileTreePopupMenu extends JPopupMenu
             }
         });
         return openFile;
+    }
+    
+    private JMenuItem createProperty(){
+        JMenuItem openProperty = new JMenuItem("Properties");
+        openProperty.addActionListener(new ActionListener() 
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                File f = clickedNode.getLinkDir();
+                PropertiesDialog dia = new PropertiesDialog(f);
+                dia.setVisible(true);
+            }
+        });
+        return openProperty;
     }
     
     private JMenuItem createAddFavorite()
